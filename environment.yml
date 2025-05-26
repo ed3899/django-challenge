@@ -2,6 +2,12 @@ name: django-challenge
 channels:
   - conda-forge
 dependencies:
-  - python=3.10
+  - python>=3.10
   - django=5.2
   - chromadb
+  - openai
+  - langchain
+  - langchain[openai]
+  - pillow
+  - pytesseract
+  - sentence-transformers
