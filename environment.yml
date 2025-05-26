@@ -3,5 +3,5 @@ channels:
   - conda-forge
 dependencies:
   - python=3.10
-  - django
+  - django=5.2
   - chromadb
