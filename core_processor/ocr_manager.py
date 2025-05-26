@@ -3,13 +3,13 @@ import pytesseract
 
 def load_image_and_extract_text(image_path: str) -> str:
     """
-    Extracts text from a JPG image using Tesseract OCR and returns a LangChain Document.
+    Extracts text from a JPG image using Tesseract OCR and returns the extracted text.
 
     Args:
         image_path (str): The path to the JPG image.
 
     Returns:
-        Document: A LangChain Document containing the extracted text.
+        The extracted text.
     """
 
     try:
