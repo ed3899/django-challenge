@@ -256,7 +256,7 @@ class ChromaDBManager:
             logger.error(f"Dataset path '{dataset_path}' is not a valid directory.")
             return
 
-        logger.info(f"Starting to load initial dataset from: {dataset_path}")
+        print(f"Starting to load initial dataset from: {dataset_path}")
         processed_count = 0
         skipped_count = 0
 
@@ -273,13 +273,13 @@ class ChromaDBManager:
                 file_path = os.path.join(root, file_name)
                 doc_id = str(uuid.uuid4()) # Generate a unique ID for each document
 
-                logger.info(f"Processing file: {file_path} (Category: {category})")
+                print(f"Processing file: {file_path} (Category: {category})")
 
                 try:
                     # 1. Extract text using OCR
                     raw_text = load_image_and_extract_text(file_path)
                     if not raw_text:
-                        logger.warning(f"No text extracted from {file_name}. Skipping.")
+                        print(f"No text extracted from {file_name}. Skipping.")
                         skipped_count += 1
                         continue
 
@@ -297,13 +297,13 @@ class ChromaDBManager:
                         processed_count += 1
                     else:
                         skipped_count += 1 # Upsert failed for some reason
-                        logger.error(f"Failed to upsert document {file_name} into ChromaDB.")
+                        print(f"Failed to upsert document {file_name} into ChromaDB.")
 
                 except Exception as e:
-                    logger.error(f"Error processing file {file_path}: {e}", exc_info=True)
+                    print(f"Error processing file {file_path}: {e}", exc_info=True)
                     skipped_count += 1
 
-        logger.info(f"Finished loading initial dataset. Processed: {processed_count} documents, Skipped: {skipped_count} documents.")
+        print(f"Finished loading initial dataset. Processed: {processed_count} documents, Skipped: {skipped_count} documents.")
 
 
 # Global instance for easy access throughout the Django app
