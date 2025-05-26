@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,6 +27,13 @@ SECRET_KEY = "django-insecure-%24=s79f%o=hxdk7ucia@g@#rnm$!culxdf)z+!u@%dq!6r!3+
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+# ChromaDB Configuration
+CHROMADB_HOST = os.environ.get('CHROMADB_HOST', 'localhost') # Use localhost if not set in env
+CHROMADB_PORT = os.environ.get('CHROMADB_PORT', '8000')
+CHROMADB_URL = f"http://{CHROMADB_HOST}:{CHROMADB_PORT}"
+CHROMADB_AUTH_TOKEN = os.environ.get('CHROMA_SERVER_AUTHN_CREDENTIALS', 'test-token') # From docker-compose
+CHROMADB_COLLECTION_NAME = 'document_embeddings' # Default collection name
 
 
 # Application definition
