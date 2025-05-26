@@ -7,3 +7,6 @@ dependencies:
   - chromadb
   - pillow
   - pytesseract
+  - langchain
+  - load-dotenv
+  - sentence-transformers
