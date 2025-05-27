@@ -7,6 +7,7 @@ import uuid # For generating unique IDs for documents
 
 # Import our new OCR and text cleaning utilities
 from core_processor.ocr_manager import load_image_and_extract_text
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
 
 logger = logging.getLogger(__name__)
@@ -282,6 +283,17 @@ class ChromaDBManager:
                         print(f"No text extracted from {file_name}. Skipping.")
                         skipped_count += 1
                         continue
+
+                    # Depending on the level of complexity an agentic workflow could be introduced here
+                    prompt_template = ChatPromptTemplate.from_messages(
+                        [
+                            (
+                                "system",
+                                "You talk like a pirate. Answer all questions to the best of your ability.",
+                            ),
+                            MessagesPlaceholder(variable_name="messages"),
+                        ]
+                    )
 
                     # 2. Prepare metadata
                     metadata = {
