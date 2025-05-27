@@ -7,7 +7,7 @@ dependencies:
   - chromadb
   - openai
   - langchain
-  - langchain[openai]
+  - langchain-openai
   - pillow
   - pytesseract
   - sentence-transformers
