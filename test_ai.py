@@ -9,17 +9,12 @@ if not os.environ.get("OPENAI_API_KEY"):
 
 model = init_chat_model("gpt-3.5-turbo-0125", model_provider="openai")
 
-prompt_template = ChatPromptTemplate.from_messages(
-    [
-        (
-            "system",
-            "You talk like a pirate. Answer all questions to the best of your ability.",
-        ),
-        MessagesPlaceholder(variable_name="messages"),
-    ]
-)
+prompt_template = ChatPromptTemplate([
+    ("system", "You are a helpful AI bot. Your name is Carl."),
+    ("human", "{user_input}"),
+])
 
-prompt = prompt_template.invoke({"language": "Italian", "text": "hi!"})
+prompt = prompt_template.invoke("Hello, there!")
 
 response = model.invoke(prompt)
 

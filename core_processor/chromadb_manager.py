@@ -2,12 +2,14 @@ import chromadb
 from chromadb.utils import embedding_functions
 from django.conf import settings
 import logging
+import getpass
 import os
 import uuid # For generating unique IDs for documents
 
 # Import our new OCR and text cleaning utilities
 from core_processor.ocr_manager import load_image_and_extract_text
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain.chat_models import init_chat_model
 
 
 logger = logging.getLogger(__name__)
@@ -41,6 +43,7 @@ class ChromaDBManager:
         self.client = None
         self.collection = None
         self.embedding_function = None
+        self.model = None
 
         try:
             # Initialize ChromaDB client
@@ -50,6 +53,11 @@ class ChromaDBManager:
                 headers={"Authorization": f"Bearer {settings.CHROMADB_AUTH_TOKEN}"}
             )
             logger.info(f"Successfully connected to ChromaDB at {settings.CHROMADB_URL}")
+
+            if not os.environ.get("OPENAI_API_KEY"):
+                os.environ["OPENAI_API_KEY"] = getpass.getpass("Enter API key for OpenAI: ")
+
+            self.model = init_chat_model("gpt-3.5-turbo-0125", model_provider="openai")
 
             # Define the embedding function.
             # This is crucial for ChromaDB to convert text into embeddings for similarity search.
@@ -289,11 +297,17 @@ class ChromaDBManager:
                         [
                             (
                                 "system",
-                                "You talk like a pirate. Answer all questions to the best of your ability.",
+                                "You are a helpful AI bot. Given the provided text, clean it up and format accordingly",
                             ),
-                            MessagesPlaceholder(variable_name="messages"),
+                            ("human", "{user_input}"),
                         ]
                     )
+
+                    prompt = prompt_template.invoke(raw_text)
+
+                    response = self.model.invoke(prompt)
+
+                    print(response.text())
 
                     # 2. Prepare metadata
                     metadata = {
@@ -304,7 +318,7 @@ class ChromaDBManager:
                     }
 
                     # 3. Store in ChromaDB
-                    success = self.upsert_document(doc_id, raw_text, metadata)
+                    success = self.upsert_document(doc_id, response.text(), metadata)
                     if success:
                         processed_count += 1
                     else:
